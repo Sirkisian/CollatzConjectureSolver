@@ -3,8 +3,8 @@
 #include <array>
 #include "vecnumber.hpp"
 
-//Template class for solving of Collatz Conjecture
-//return value is odd count, even count and maximum member
+//Template class for solving Collatz conjecture
+//return values are odd count, even count and maximum member
 template <class T>
 class Solver
 {

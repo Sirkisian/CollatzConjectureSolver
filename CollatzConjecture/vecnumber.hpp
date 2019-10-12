@@ -5,7 +5,7 @@
 #include <algorithm>
 #include "exceptionhandler.hpp"
 
-//Template class for storing string consisting of numbers "123456789" into array of numbers [1][2][3][4][5][6][7][8][9]
+//Template class for storing string consisting of numbers "1234567890" into array of numbers [1][2][3][4][5][6][7][8][9][0]
 template <class T>
 class VecNumber
 {
