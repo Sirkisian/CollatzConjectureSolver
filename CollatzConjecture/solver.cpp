@@ -5,44 +5,36 @@ bool Solver<T>::solve(const VecNumber<T> & number, std::array<VecNumber<T>, 3> &
 {
 	if(number.validNumber())
 	{
-		if(!(VecNumber<T>(2) > number)) //Number > 1
+		if(number > 1)
 		{
 			VecNumber<T> oddCount;
 			VecNumber<T> evenCount;
-			VecNumber<T> maximum;
-
+			VecNumber<T> maximum = number;
 			VecNumber<T> value = number;
 
-			while(1) //Can be changed to a limit
+			while(!value.isOne())
 			{
-				if(value.isOne())
+				if(value.isEven())
 				{
-					break;
+					value = value / 2;
+
+					evenCount++;
 				}
 				else
 				{
-					if(value.isEven())
-					{
-						value = value / 2;
-
-						evenCount++;
-					}
-					else
-					{
-						value = (value * 3) + 1;
-
-						oddCount++;
-					}
+					value = (value * 3) + 1;
 
 					if(value > maximum)
 					{
 						maximum = value;
 					}
 
-					if(show)
-					{
-						std::cout << value << " " << std::endl;
-					}
+					oddCount++;
+				}
+
+				if(show)
+				{
+					std::cout << value << " " << std::endl;
 				}
 			}
 

@@ -30,7 +30,8 @@ class VecNumber
 		VecNumber operator*(const VecNumber & number);
 		VecNumber operator+(unsigned int number);
 		VecNumber operator+(const VecNumber & number);
-		bool operator>(const VecNumber & number);
+		bool operator>(unsigned int number) const;
+		bool operator>(const VecNumber & number) const;
 
 		friend std::ostream & operator<<(std::ostream & out, const VecNumber & number)
 		{

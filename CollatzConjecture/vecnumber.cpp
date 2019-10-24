@@ -211,7 +211,15 @@ VecNumber<T> VecNumber<T>::operator+(const VecNumber & number)
 }
 
 template <class T>
-bool VecNumber<T>::operator>(const VecNumber & number)
+bool VecNumber<T>::operator>(unsigned int number) const
+{
+	VecNumber vecNumber = number;
+
+	return *this > vecNumber;
+}
+
+template <class T>
+bool VecNumber<T>::operator>(const VecNumber & number) const
 {
 	size_t sizeA = this->value.size();
 	size_t sizeB = number.value.size();

@@ -1,3 +1,6 @@
+#include <chrono>
+#include <mutex>
+#include <thread>
 #include "stringmanipulator.hpp"
 #include "solver.hpp"
 
@@ -6,10 +9,16 @@
 //#define DTYPE unsigned int
 //#define DTYPE unsigned char
 
+std::mutex coutLock;
+
+void threadPrint(const bool & printLoop);
+void threadSolve(const VecNumber<DTYPE> & number, bool & printLoop);
+
 int main()
 {
-	VecNumber<DTYPE> number;
+	bool printLoop;
 	std::string input;
+	VecNumber<DTYPE> number;
 
 	std::cout << "Collatz Conjecture 'Solver'" << std::endl;
 
@@ -26,14 +35,12 @@ int main()
 
 			number = input;
 
-			std::array<VecNumber<DTYPE>, 3> result;
-			if (Solver<DTYPE>::solve(number, result/*, true*/))
-			{
-				std::cout << "Number of 3k+1 operations: " << result[0] << std::endl;
-				std::cout << "Number of 2k operations: " << result[1] << std::endl;
-				std::cout << "Maximum member: " << result[2] << std::endl;
-				std::cout << std::endl;
-			}
+			printLoop = true;
+			std::thread solve(threadSolve, std::ref(number), std::ref(printLoop));
+			std::thread print(threadPrint, std::ref(printLoop));
+
+			solve.join();
+			print.join();
 		}
 
 		std::cout << "Number: ";
@@ -42,4 +49,42 @@ int main()
 	//system("pause");
 
 	return 0;
+}
+
+void threadPrint(const bool & printLoop)
+{
+	while(true)
+	{
+		coutLock.lock();
+		if(printLoop)
+		{
+			std::cout << ".";
+		}
+		else
+		{
+			coutLock.unlock();
+
+			break;
+		}
+		coutLock.unlock();
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+	}
+}
+
+void threadSolve(const VecNumber<DTYPE> & number, bool & printLoop)
+{
+	std::array<VecNumber<DTYPE>, 3> result;
+
+	if(Solver<DTYPE>::solve(number, result))
+	{
+		std::lock_guard<std::mutex> lock(coutLock);
+		printLoop = false;
+
+		std::cout << "\r";
+		std::cout << "Number of 3k+1 operations: " << result[0] << std::endl;
+		std::cout << "Number of 2k operations: " << result[1] << std::endl;
+		std::cout << "Maximum member: " << result[2] << std::endl;
+		std::cout << std::endl;
+	}
 }
