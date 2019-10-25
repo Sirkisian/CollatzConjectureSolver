@@ -76,12 +76,14 @@ void threadSolve(const VecNumber<DTYPE> & number, bool & printLoop)
 {
 	std::array<VecNumber<DTYPE>, 3> result;
 
-	if(Solver<DTYPE>::solve(number, result))
-	{
-		std::lock_guard<std::mutex> lock(coutLock);
-		printLoop = false;
+	bool solved = Solver<DTYPE>::solve(number, result);
 
-		std::cout << "\r";
+	std::lock_guard<std::mutex> lock(coutLock);
+	printLoop = false;
+	std::cout << "\r";
+
+	if(solved)
+	{
 		std::cout << "Number of 3k+1 operations: " << result[0] << std::endl;
 		std::cout << "Number of 2k operations: " << result[1] << std::endl;
 		std::cout << "Maximum member: " << result[2] << std::endl;
